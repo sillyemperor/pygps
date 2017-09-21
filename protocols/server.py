@@ -1,18 +1,15 @@
 # -*- coding:utf8 -*-
+import SocketServer
+import socket
+import threading
 
-from gevent import socket
-from gevent.server import StreamServer
-from cStringIO import StringIO
 
-def handle_echo(sock, address):
-    buff = StringIO()
-    while True:
-        data = sock.recv(1024)
-        if not data:
-            break
-        buff.write(data)
-    print buff.getvalue()
-    socket.close()
+class ProtocolTCPRequestHandler(SocketServer.BaseRequestHandler):
 
-server = StreamServer(("", 2345), handle_echo)
-server.server_forever()
+    def handle(self):
+        data = self.request.recv(1024)
+        print data
+        self.request.sendall(data)
+
+server = SocketServer.ThreadingTCPServer(('localhost', 3007), ProtocolTCPRequestHandler)
+server.serve_forever()
