@@ -5,11 +5,22 @@ import threading
 
 
 class ProtocolTCPRequestHandler(SocketServer.BaseRequestHandler):
-
     def handle(self):
         data = self.request.recv(1024)
         print data
         self.request.sendall(data)
 
-server = SocketServer.ThreadingTCPServer(('localhost', 3007), ProtocolTCPRequestHandler)
+
+class ProtocolUDPHandler(SocketServer.BaseRequestHandler):
+    def handle(self):
+        data = self.request[0].strip()
+        socket = self.request[1]
+        print data
+        socket.sendto(data, self.client_address)
+
+
+# server = SocketServer.ThreadingTCPServer(('', 3007), ProtocolTCPRequestHandler)
+server = SocketServer.ThreadingUDPServer(('', 3007), ProtocolTCPRequestHandler)
 server.serve_forever()
+
+
