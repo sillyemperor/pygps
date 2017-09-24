@@ -1,19 +1,19 @@
 # -*- coding:utf8 -*-
 """奇诺美"""
-from protocol import MessageRouter
+from protocol import ProtocolTranslator
 from result import Location
 import binascii
 import datetime
 eightHour=datetime.timedelta(hours=8)
 
-class Qnm(MessageRouter):
+class Qnm(ProtocolTranslator):
     def build_response(self, s):
         pass
 
     def main_signaling(self, s):
         return s.startswith('24') and 'binary' or 'ascii'
 
-    def prepare_data(self, data):
+    def decode_data(self, data):
         return data[0]=='$' and binascii.a2b_hex(data) or data
 
     def on_ms_binary(self, s):

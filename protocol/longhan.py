@@ -3,10 +3,10 @@
 from result import Location, HeartBeat
 from datetime import datetime
 import logging
-from protocol import MessageRouter
+from protocol import ProtocolTranslator
 
 
-class Longhan16m(MessageRouter):
+class Longhan16m(ProtocolTranslator):
     """LH-16Smart（16M）"""
     @staticmethod
     def sum(s):
@@ -75,7 +75,7 @@ class Longhan16m(MessageRouter):
         statusstr = s[54:56]
         mileagestr = s[56:62]
         veicheStausstr = s[62:70]
-        submit_time = datetime.now()
+
         lat = float(lngstr[0:3]) + float(lngstr[3:]) / 60000
         lng = float(latstr[0:3]) + float(latstr[3:]) / 60000
         speed = float(float(speedstr) / 3.6)
@@ -89,13 +89,15 @@ class Longhan16m(MessageRouter):
         if powerstatus == 'off':
             alerts.append(dict(description=u'断电'))
 
-        data_time = submit_time
         accstr = bin(int(statusstr[0:2], 16))[2:].zfill(8)[0:1]
         ACC = 'off'
         if accstr == '0':
             ACC = 'ok'
+
+        submit_time = datetime.now()
+        data_time = submit_time
         try:
-            data_time = datetime.datetime(int("20" + str(int(timestr[:2]))), int(timestr[2:4]), int(timestr[4:6]),
+            data_time = datetime(int("20" + str(int(timestr[:2]))), int(timestr[2:4]), int(timestr[4:6]),
                                          int(timestr[6:8]), int(timestr[8:10]), int(timestr[10:12]))
         except Exception as ex:
             logging.debug("Wrong time format time=%s imei=%s", timestr, imei)

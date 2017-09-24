@@ -1,12 +1,12 @@
 # -*- coding:utf8 -*-
 """博实结"""
-from protocol import MessageRouter
+from protocol import ProtocolTranslator
 from result import Location
 import datetime
 import logging
 
 
-class A5(MessageRouter):
+class A5(ProtocolTranslator):
     """A5"""
     @staticmethod
     def sum(s):
@@ -90,7 +90,7 @@ class A5(MessageRouter):
         return ret
 
 
-class Km(MessageRouter):
+class Km(ProtocolTranslator):
     """KM"""
     pass
 

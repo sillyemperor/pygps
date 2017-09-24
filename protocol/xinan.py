@@ -1,12 +1,12 @@
 # -*- coding:utf8 -*-
 """联和安业"""
-from protocol import MessageRouter
+from protocol import ProtocolTranslator
 from result import Location
 import datetime
 import logging
 
 
-class Xinan(MessageRouter):
+class Xinan(ProtocolTranslator):
     """
     T360-HE101GPRS、T360-HE269
                       SN          date time         lng            lat       speed  bearing   status
@@ -115,7 +115,7 @@ alert 第三字节
                                          , int(timestr[10:12]))
         except Exception as ex:
             logging.debug("Wrong time format time=%s imei=%s", timestr, imei)
-            return Location(
+        return Location(
                 imei=imei,
                 time=dataTime,
                 lng=lng,
@@ -140,4 +140,24 @@ alert 第三字节
         ret = self.on_ms_80(s)
         ret.jit = False
         return ret
+
+    def build_signal(self, name, s):
+        ip = s[10:18]
+        valstr = None
+        if name == "turn on":
+            valstr = "380006" + ip
+        elif name == "shut down":
+            valstr = "390006" + ip
+        elif name == "call name":
+            valstr = "300006" + ip
+        elif name == "self check":
+            valstr = "310006" + ip
+        elif name == "reboot":
+            valstr = "320006" + ip
+        elif name == "cancel alarm":
+            valstr = "370006" + ip
+        if valstr:
+            restr = "2929" + valstr + Xinan.sum(valstr) + "0d"
+            return restr.upper()
+
 
