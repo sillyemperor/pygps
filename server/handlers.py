@@ -25,10 +25,11 @@ class ProtocolTCPHandler:
                 request.sendall(binascii.a2b_hex(response))
             self.pusher.push(result)
             if self.user_signal:
-                for name in self.user_signal.getall(result.imei):
+                for sid, name in self.user_signal.getall(result.imei):
                     signal = self.translator.build_signal(name, input_data)
                     if signal:
                         request.sendall(binascii.a2b_hex(signal))
+                    self.user_signal.mark_read(sid)
         except Exception as e:
             logging.error('route fail err=%s input_data=%s ', e, input_data)
 
@@ -48,10 +49,11 @@ class ProtocolUDPHandler:
                 socket.sendto(binascii.a2b_hex(response), client_address)
             self.pusher.push(result)
             if self.user_signal:
-                for name in self.user_signal.getall(result.imei):
+                for sid, name in self.user_signal.getall(result.imei):
                     signal = self.translator.build_signal(name, input_data)
                     if signal:
                         request.sendall(binascii.a2b_hex(signal))
+                    self.user_signal.mark_read(sid)
         except Exception as e:
             logging.error('route fail err=%s input_data=%s ', e, input_data)
 

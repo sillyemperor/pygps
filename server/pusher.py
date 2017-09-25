@@ -15,7 +15,10 @@ class ThreadQueuePusher:
         while True:
             o = self.queue.get()
             if isinstance(o, Location):
-                self.dal.add_location(o)
+                try:
+                    self.dal.add_location(o)
+                except Exception as e:
+                    logging.debug('failed to add_location %s %s', o, e)
 
     def push(self, o):
         try:
