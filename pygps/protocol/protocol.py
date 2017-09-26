@@ -36,6 +36,14 @@ class ProtocolTranslator:
         """
         return binascii.b2a_hex(data)
 
+    def encode_data(self, s):
+        """
+        设备输出转换，例如：从16进制字符串转成字节流
+        :param s:
+        :return:
+        """
+        return s.decode("hex")
+
     def route_message(self, s):
         ms = 'on_ms_%s'%str(self.main_signaling(s)).lower()
         if not hasattr(self, ms):

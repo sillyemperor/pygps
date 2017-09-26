@@ -1,13 +1,13 @@
-from ..longhan import Longhan16m
-from ..xinan import Xinan
-
 import unittest
-from ..result import Location, HeartBeat
 import binascii
-
 import datetime
 
-class AllTests(unittest.TestCase):
+from ..longhan import Longhan16m
+from ..xinan import Xinan
+from ..result import Location, HeartBeat
+
+
+class AllTestCase(unittest.TestCase):
 
     def test_Xinan(self):
         s = '292980002810899f2d141015112501030183471200539100000000f8000442ffff5400001e000000000000450d'

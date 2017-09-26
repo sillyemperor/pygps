@@ -1,6 +1,6 @@
 # -*- coding:utf8 -*-
 import Queue
-from protocol.result import Location
+from ..protocol.result import Location
 import logging
 import threading
 

@@ -33,7 +33,7 @@ setup(
     ],
 
     keywords='GPS equipment protocol',
-    packages=['protocol', 'server', 'goodhope'],
+    packages=['pygps', 'pygps/server', 'pygps/protocol', 'pygps/goodhope'],
     install_requires=[],
     extras_require={},
     package_data={},

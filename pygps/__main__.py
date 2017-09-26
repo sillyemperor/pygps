@@ -1,7 +1,9 @@
 # -*- coding:utf8 -*-
-import SocketServer
-from handlers import ProtocolUDPHandler, ProtocolTCPHandler
 import logging
+from twisted.internet import reactor
+from server.handlers import ProtocalTCPFactory, ProtocalUDPHandler
+from server.pusher import ThreadQueuePusher
+from goodhope.dal import GPSDal
 
 
 def init_log(level, name, path='', dir='/tmp/logs'):
@@ -24,17 +26,15 @@ def init_log(level, name, path='', dir='/tmp/logs'):
     logging.getLogger().addHandler(handler)
 
 
-def run_udp_server(translator, port, pusher, user_signal=None):
-    init_log(logging.DEBUG, name='%s.log'%translator.__class__.__name__, path=translator.__module__)
-    server = SocketServer.ThreadingUDPServer(('', port), ProtocolUDPHandler(translator, pusher, user_signal))
-    server.serve_forever()
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='启动GPS前置机服务')
+    parser.add_argument('-c', help="数据库连接字符串")
+    args = parser.parse_args()
 
+    if not args.c:
+        print parser.print_help()
 
-def run_tcp_server(translator, port, pusher, user_signal=None):
-    init_log(logging.DEBUG, name='%s.log'%translator.__class__.__name__, path=translator.__module__)
-    server = SocketServer.ThreadingTCPServer(('', port), ProtocolTCPHandler(translator, pusher, user_signal))
-    server.serve_forever()
+    dal = GPSDal(args.c)
 
-
-
-
+# reactor.listenTCP(5001,ProtocalTCPFactory(QNMTCP))
