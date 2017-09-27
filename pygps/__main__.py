@@ -47,14 +47,15 @@ if __name__ == '__main__':
     logging.info('start with %s', args)
 
     #
-    dal = GPSDal(args.connection)
-    pusher = ThreadQueuePusher(dal=dal)
+    dal1 = GPSDal(args.connection)
+    dal2 = GPSDal(args.connection)
+    pusher = ThreadQueuePusher(dal=dal1)
     translator = globals()[args.translator]()
     port = int(args.p)
 
     if args.P == 'TCP':
-        reactor.listenTCP(port, ProtocalTCPFactory(translator=translator, pusher=pusher, user_signal=dal))
+        reactor.listenTCP(port, ProtocalTCPFactory(translator=translator, pusher=pusher, user_signal=dal2))
     else:
-        reactor.listenUDP(port,ProtocalUDPHandler(translator=translator, pusher=pusher, user_signal=dal))
+        reactor.listenUDP(port,ProtocalUDPHandler(translator=translator, pusher=pusher, user_signal=dal2))
 
     reactor.run()
