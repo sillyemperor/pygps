@@ -143,7 +143,7 @@ alert 第三字节
 
     def on_ms_b1(self, s):
         imei = Xinan.imei(s[10:18])
-        return HeartBeat(imei, datetime.now())
+        return HeartBeat(imei, datetime.datetime.now())
 
     def build_signal(self, name, s):
         ip = s[10:18]
