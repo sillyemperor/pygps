@@ -44,7 +44,7 @@ class GPSDal:
         position = 'POINT(%f %f)' % (location.lng, location.lat)
 
         if location.jit:
-            self.execute('''
+            print 'update vehicle', vehicleID, self.execute('''
             update [Vehicle] 
             set Mileage=?,
                 position=geometry::STGeomFromText(?,4326),
@@ -95,7 +95,7 @@ class GPSDal:
                 ''
                 ])
 
-        self.execute('''
+        print 'insert tracepoint', len(params), self.execute('''
             INSERT INTO [Tracepoint]
 			([SubjectID]
 			,[SubjectType]
