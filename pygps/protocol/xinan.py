@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 """联和安业"""
 from protocol import ProtocolTranslator
-from result import Location
+from result import Location, HeartBeat
 import datetime
 import logging
 
@@ -140,6 +140,10 @@ alert 第三字节
         ret = self.on_ms_80(s)
         ret.jit = False
         return ret
+
+    def on_ms_b1(self, s):
+        imei = Xinan.imei(s[10:18])
+        return HeartBeat(imei, datetime.now())
 
     def build_signal(self, name, s):
         ip = s[10:18]
