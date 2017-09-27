@@ -19,7 +19,13 @@ class Location:
         self.submit_time = submit_time
 
     def __str__(self):
-        return ','.join([str(i) for i in inspect.getmembers(self)])
+        return 'imei={imei}, time={time}, lng={lng}, lat={lat}, speed={speed}' \
+               ', bearing={bearing}, altitude={altitude}, alerts={alerts}, jit={jit}' \
+               ', submit_time={submit_time}, acc={acc}, power={power}'.format(
+            imei=self.imei, time=self.time, lng=self.lng, lat=self.lat, speed=self.speed, bearing=self.bearing,
+            altitude=self.altitude, alerts=self.alerts, jit=self.jit,
+            submit_time=self.submit_time, acc=self.acc, power=self.acc
+        )
 
 
 class HeartBeat:

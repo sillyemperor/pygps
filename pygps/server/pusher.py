@@ -14,6 +14,7 @@ class ThreadQueuePusher:
     def poll_queue(self):
         while True:
             o = self.queue.get()
+            print 'poll_queue', o, self.queue.qsize()
             if isinstance(o, Location):
                 try:
                     self.dal.add_location(o)

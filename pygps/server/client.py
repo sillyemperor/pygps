@@ -27,5 +27,7 @@ def udp_write(host, port, content):
 
 if __name__ == '__main__':
     import binascii
-    # tcp_write('localhost', 3007, binascii.a2b_hex('2929800032150b1a94170921213448028412051214493700000102fc15480aaffddff8001e00000000000000080010013121112620740d'))
-    udp_write('localhost', 3007, binascii.a2b_hex('2929800032150b1a94170921213448028412051214493700000102fc15480aaffddff8001e00000000000000080010013121112620740d'))
+    import gevent
+
+    gevent.joinall([ gevent.spawn(udp_write, 'localhost', 3009, binascii.a2b_hex('29298000281086985400000014522400000000000000000000000078fbbec37ffc1900001e000000000000ea0d')) for i in range(100) ])
+
