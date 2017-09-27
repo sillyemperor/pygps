@@ -22,6 +22,18 @@ class AllTestCase(unittest.TestCase):
         self.assertEqual(result.speed, 0.0),
         self.assertEqual(result.time, datetime.datetime(2014, 10, 15, 11, 25, 1))
 
+        s = '29298e0028348ace2a170927225529030090261215977000000000f8b0c8ab7fffc0000000000000000000a50d'
+        result, response, input_data = proc.on_message(binascii.a2b_hex(s))
+        print result, response, input_data
+
+        s = '29298000281086985400000014522400000000000000000000000078fbbec37ffc1900001e000000000000ea0d'
+        result, response, input_data = proc.on_message(binascii.a2b_hex(s))
+        print result, response, input_data
+
+        s = '2929b10007348ace0d0cc70d'
+        result, response, input_data = proc.on_message(binascii.a2b_hex(s))
+        print result, response, input_data
+
     def test_Longhan16m(self):
         s = '2929800032150b1a94170921213448028412051214493700000102fc15480aaffddff8001e00000000000000080010013121112620740d'
         proc = Longhan16m()

@@ -28,6 +28,7 @@ class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
     def dataReceived(self, data):
         try:
             result, response, input_data = self.translator.on_message(data)
+            print result, response, input_data
             if response:
                 self.transport.write(self.translator.encode_data(response))
             self.pusher.push(result)
@@ -61,6 +62,7 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
         input_data = data
         try:
             result, response, input_data = self.translator.on_message(data)
+            print result, response, input_data
             if response:
                 self.transport.write(self.translator.encode_data(response),(host, port))
             self.pusher.push(result)
