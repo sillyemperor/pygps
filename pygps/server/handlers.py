@@ -26,20 +26,17 @@ class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
         logging.info('%s timeout', self.transport)
 
     def dataReceived(self, data):
-        try:
-            result, response, input_data = self.translator.on_message(data)
-            print result, response, input_data
-            if response:
-                self.transport.write(self.translator.encode_data(response))
-            self.pusher.push(result)
-            if self.user_signal:
-                for sid, name in self.user_signal.get_all_signal(result.imei):
-                    signal = self.translator.build_signal(name, input_data)
-                    if signal:
-                        self.transport.write(self.translator.encode_data(signal))
-                    self.user_signal.mark_read_signal(sid)
-        except Exception as e:
-            logging.error('route fail err=%s input_data=%s ', e, input_data)
+        result, response, input_data = self.translator.on_message(data)
+        print result, response, input_data
+        if response:
+            self.transport.write(self.translator.encode_data(response))
+        self.pusher.push(result)
+        if self.user_signal:
+            for sid, name in self.user_signal.get_all_signal(result.imei):
+                signal = self.translator.build_signal(name, input_data)
+                if signal:
+                    self.transport.write(self.translator.encode_data(signal))
+                self.user_signal.mark_read_signal(sid)
 
 
 class ProtocalTCPFactory(protocol.Factory):
