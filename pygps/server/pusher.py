@@ -9,7 +9,7 @@ class ThreadQueuePusher:
     def __init__(self, dal, maxsize=256):
         self.queue = Queue.Queue(maxsize=maxsize)
         self.dal = dal
-        threading.Thread(target=self.poll_queue)
+        threading.Thread(target=self.poll_queue).start()
 
     def poll_queue(self):
         while True:
