@@ -58,6 +58,7 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
         self.user_signal=user_signal
 
     def datagramReceived(self, data, (host, port)):
+        input_data = data
         try:
             result, response, input_data = self.translator.on_message(data)
             if response:
