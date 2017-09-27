@@ -132,12 +132,3 @@ class GPSDal:
     def mark_read_signal(self, sid):
         self.execute('update instruction set SendDate=getdate(),IsSend=true where InstructionID=?', sid)
 
-if __name__ == '__main__':
-    import threading
-    dal = GPSDal('DRIVER={SQL Server};SERVER=115.238.31.233,3433;DATABASE=GoodHopeV2;UID=sa;PWD=goodhope315201')
-
-    def foo(dal):
-        for i in dal.get_all_signal('13652107842'):
-            print i
-
-    threading.Thread(target=foo, args=[dal]).start()
