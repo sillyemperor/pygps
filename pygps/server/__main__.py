@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    init_log(logging.DEBUG, '%s.log'%args.translator)
+    init_log(logging.DEBUG, '%s.log'%args.translator, dir='./logs')
 
     logging.info('start with %s', args)
 
