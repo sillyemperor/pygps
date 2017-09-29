@@ -59,10 +59,10 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
         self.user_signal=user_signal
 
     def datagramReceived(self, data, (host, port)):
-        print 1
+        print 1, data
         try:
             result, response, input_data = self.translator.on_message(data)
-            print 2
+            print 2, result, response, input_data
             if response:
                 self.transport.write(self.translator.encode_data(response), (host, port))
                 print 3
@@ -74,6 +74,6 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
                     if signal:
                         self.transport.write(self.translator.encode_data(signal), (host, port))
                     self.user_signal.mark_read_signal(sid)
+            print 5
         except Exception as e:
             logging.error('err=%s', e)
-            traceback.print_stack()
