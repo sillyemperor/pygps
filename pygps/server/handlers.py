@@ -4,6 +4,7 @@ import logging
 from twisted.internet import protocol
 from twisted.protocols.policies import TimeoutMixin
 
+import traceback
 
 class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
     def __init__(self, translator, pusher, user_signal=None):
@@ -59,7 +60,6 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
 
     def datagramReceived(self, data, (host, port)):
         try:
-            logging.info('data reveived %s 【%s】', data.decode('hex'), data)
             result, response, input_data = self.translator.on_message(data)
             if response:
                 self.transport.write(self.translator.encode_data(response), (host, port))
@@ -72,3 +72,4 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
                     self.user_signal.mark_read_signal(sid)
         except Exception as e:
             logging.error('err=%s', e)
+            traceback.print_stack()
