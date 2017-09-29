@@ -39,8 +39,7 @@ class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
                         self.transport.write(self.translator.encode_data(signal))
                     self.user_signal.mark_read_signal(sid)
         except Exception as e:
-            pass
-            # logging.error('err=%s', e)
+            logging.error('err=%s', e)
 
 
 class ProtocalTCPFactory(protocol.Factory):
@@ -73,5 +72,4 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
                         self.transport.write(self.translator.encode_data(signal), (host, port))
                     self.user_signal.mark_read_signal(sid)
         except Exception as e:
-            pass
-            # logging.error('err=%s', e)
+            logging.error('err=%s', e)

@@ -116,18 +116,19 @@ class GPSDal:
         self.location_buff = []
 
     def get_all_signal(self, imei):
-        for i in self.fetchall('''
-        select 
-            Instruction.InstructionID,
-            Instruction.Sign,
-            Instruction.Value 
-        from Instruction,vehicle
-        where 
-            vehicle.imei = ? and 
-            issend = 'false' and
-            vehicle.vehicleid = Instruction.VehicleID        
-        ''', imei):
-            yield i.InstructionID, i.Sign
+        return []
+        # for i in self.fetchall('''
+        # select
+        #     Instruction.InstructionID,
+        #     Instruction.Sign,
+        #     Instruction.Value
+        # from Instruction,vehicle
+        # where
+        #     vehicle.imei = ? and
+        #     issend = 'false' and
+        #     vehicle.vehicleid = Instruction.VehicleID
+        # ''', imei):
+        #     yield i.InstructionID, i.Sign
 
     def mark_read_signal(self, sid):
         self.execute('update instruction set SendDate=getdate(),IsSend=true where InstructionID=?', sid)

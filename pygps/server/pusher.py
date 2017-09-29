@@ -21,14 +21,14 @@ class ThreadQueuePusher:
                     self.dal.add_location(o)
                 except Exception as e:
                     print e
-                    logging.debug('failed to add_location %s %s', o, e)
+                    logging.error('failed to add_location %s %s', o, e)
 
     def push(self, o):
         try:
             self.queue.put_nowait(o)
         except Exception as e:
             print e
-            logging.debug('failed to push %s %s', o, e)
+            logging.error('failed to push %s %s', o, e)
 
 
 
