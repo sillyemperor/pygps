@@ -3,6 +3,7 @@ import Queue
 from ..protocol.result import Location
 import logging
 import threading
+import traceback
 
 
 class ThreadQueuePusher:
@@ -20,15 +21,15 @@ class ThreadQueuePusher:
                 try:
                     self.dal.add_location(o)
                 except Exception as e:
-                    print e
                     logging.error('failed to add_location %s %s', o, e)
+                    traceback.print_stack()
 
     def push(self, o):
         try:
             self.queue.put_nowait(o)
         except Exception as e:
-            print e
             logging.error('failed to push %s %s', o, e)
+            traceback.print_stack()
 
 
 

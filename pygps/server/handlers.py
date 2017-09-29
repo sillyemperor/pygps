@@ -59,11 +59,15 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
         self.user_signal=user_signal
 
     def datagramReceived(self, data, (host, port)):
+        print 1
         try:
             result, response, input_data = self.translator.on_message(data)
+            print 2
             if response:
                 self.transport.write(self.translator.encode_data(response), (host, port))
+                print 3
             self.pusher.push(result)
+            print 4
             if self.user_signal:
                 for sid, name in self.user_signal.get_all_signal(result.imei):
                     signal = self.translator.build_signal(name, input_data)
