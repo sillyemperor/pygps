@@ -15,19 +15,20 @@ class ThreadQueuePusher:
         while True:
             o = self.queue.get()
             print 'poll_queue', self.queue.qsize()
+            logging.debug('poll_queue size(%s)', self.queue.qsize())
             if isinstance(o, Location):
                 try:
                     self.dal.add_location(o)
                 except Exception as e:
                     print e
-                    # logging.debug('failed to add_location %s %s', o, e)
+                    logging.debug('failed to add_location %s %s', o, e)
 
     def push(self, o):
         try:
             self.queue.put_nowait(o)
         except Exception as e:
             print e
-            # logging.debug('failed to push %s %s', o, e)
+            logging.debug('failed to push %s %s', o, e)
 
 
 

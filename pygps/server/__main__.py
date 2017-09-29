@@ -1,13 +1,13 @@
 # -*- coding:utf8 -*-
 import logging
 from twisted.internet import reactor
-from server.handlers import ProtocalTCPFactory, ProtocalUDPHandler
-from server.pusher import ThreadQueuePusher
-from goodhope.dal import GPSDal
-from protocol.bsj import A5, Km
-from protocol.longhan import Longhan16m
-from protocol.xinan import Xinan
-from protocol.qnm import Qnm
+from pygps.server.handlers import ProtocalTCPFactory, ProtocalUDPHandler
+from pygps.server.pusher import ThreadQueuePusher
+from pygps.goodhope.dal import GPSDal
+from pygps.protocol.bsj import A5, Km
+from pygps.protocol.longhan import Longhan16m
+from pygps.protocol.xinan import Xinan
+from pygps.protocol.qnm import Qnm
 
 
 def init_log(level, name, path='', dir='/tmp/logs'):
@@ -23,12 +23,14 @@ def init_log(level, name, path='', dir='/tmp/logs'):
     handler = logging.handlers.RotatingFileHandler(
         file_path, maxBytes=1048576, backupCount=5)
     handler.setLevel(level)
-    handler.setFormatter(logging.Formatter('%(asctime)s %(thread)d %(levelno)s  %(pathname)s %(lineno)d %(funcName)s %(message)s'))
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelno)s %(thread)d %(pathname)s %(lineno)d %(funcName)s %(message)s'))
     logging.getLogger().addHandler(handler)
 
     handler = logging.StreamHandler()
     handler.setLevel(level)
-    handler.setFormatter(logging.Formatter('%(asctime)s %(thread)d %(levelno)s  %(pathname)s %(lineno)d %(funcName)s %(message)s'))
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelno)s %(thread)d %(pathname)s %(lineno)d %(funcName)s %(message)s'))
     logging.getLogger().addHandler(handler)
 
 
@@ -42,7 +44,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    init_log(logging.INFO, '%s.log'%args.translator)
+    init_log(logging.DEBUG, '%s.log'%args.translator)
 
     logging.info('start with %s', args)
 
