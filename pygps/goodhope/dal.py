@@ -94,9 +94,11 @@ class GPSDal:
         self.location_buff = []
 
     def treat_alert(self, vehicleID, groupOwner, alerts):
+        if not alerts:
+            return 
         n = len(alerts)
         if n<1:
-            return 
+            return
         values = ','.join(['(?, ?, ?)' for i in range(n)])
         params = []
         for a in alerts:
