@@ -33,6 +33,7 @@ class A5(ProtocolTranslator):
         restr = restr.upper()
 
     def on_ms_80(self, s):
+        print s
         imei = A5.imei(s[10:18])
         # log
         timestr = s[18:30]
@@ -40,28 +41,16 @@ class A5(ProtocolTranslator):
         latstr = s[38:46]
         speedstr = s[46:50]
         dirstr = s[50:54]
-        statusstr = s[54:56]
-        mileagestr = s[56:62]
-        veicheStausstr = s[62:70]
+
         submitTime = datetime.datetime.now()
         lat = float(logstr[0:3]) + float(logstr[3:]) / 60000
         lng = float(latstr[0:3]) + float(latstr[3:]) / 60000
         speed = float(float(speedstr) / 3.6)
         bearing = int(dirstr)
-        gpsflat = "err"
-        gpsstatus = "ok"
         alerts = []
 
-        a2 = int(statusstr, 16)
-        powerstatus = (a2 & 0x1c == 0x14) and 'off' or 'on'
-        if powerstatus == 'off':
-            alerts.append(dict(description=u'断电'))
-
         dataTime = submitTime
-        accstr = bin(int(statusstr[0:2], 16))[2:].zfill(8)[0:1]
-        ACC = 'off'
-        if accstr == '0':
-            ACC = 'ok'
+
         try:
             dataTime = datetime.datetime(int("20" + str(int(timestr[:2]))), int(timestr[2:4]), int(timestr[4:6]),
                                          int(timestr[6:8]), int(timestr[8:10]), int(timestr[10:12]))
