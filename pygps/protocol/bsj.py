@@ -85,9 +85,7 @@ class A5(ProtocolTranslator):
         return ret
 
     def on_ms_d8(self, s):
-        ret = self.on_ms_80(s)
-        ret.jit = False
-        return ret
+        pass
 
 
 class Km(ProtocolTranslator):
