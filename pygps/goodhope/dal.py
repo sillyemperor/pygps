@@ -9,7 +9,7 @@ class GPSDal:
         self.db_connections = db_connections
 
     def get_conn(self):
-        if hasattr(self, 'conn'):
+        if not hasattr(self, 'conn'):
             self.conn = pyodbc.connect(self.db_connections)
         return self.conn
 
