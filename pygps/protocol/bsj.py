@@ -42,6 +42,10 @@ class A5(ProtocolTranslator):
         speedstr = s[46:50]
         dirstr = s[50:54]
 
+        Bstr = s[64:65]
+        B = int(Bstr, 16)
+        print B&8, Bstr, B
+
         submitTime = datetime.datetime.now()
         lat = float(logstr[0:3]) + float(logstr[3:]) / 60000
         lng = float(latstr[0:3]) + float(latstr[3:]) / 60000
