@@ -15,23 +15,32 @@ class GPSDal:
 
     def fetchall(self, sql, *args):
         conn = self.get_conn()
-        with conn.cursor() as cur:
+        cur = conn.cursor()
+        try:
             cur.execute(sql, *args)
             return cur.fetchall()
+        finally:
+            cur.close()
 
     def fetchone(self, sql, *args):
         conn = self.get_conn()
-        with conn.cursor() as cur:
+        cur = conn.cursor()
+        try:
             cur.execute(sql, *args)
             return cur.fetchone()
+        finally:
+            cur.close()
 
     def execute(self, sql, *args):
         conn = self.get_conn()
-        with conn.cursor() as cur:
+        cur = conn.cursor()
+        try:
             cur.execute(sql, *args)
             cur.commit()
             return cur.rowcount
-
+        finally:
+            cur.close()
+            
     def get_uid(self, imei):
         user = self.fetchone('''
                     select vehicleID, groupOwner from vehicle where IMEI=?;
