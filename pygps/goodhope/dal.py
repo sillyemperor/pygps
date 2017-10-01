@@ -36,11 +36,11 @@ class GPSDal:
         cur = conn.cursor()
         try:
             cur.execute(sql, *args)
-            cur.commit()
+            conn.commit()
             return cur.rowcount
         finally:
             cur.close()
-            
+
     def get_uid(self, imei):
         user = self.fetchone('''
                     select vehicleID, groupOwner from vehicle where IMEI=?;
