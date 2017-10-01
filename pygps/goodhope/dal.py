@@ -95,8 +95,9 @@ class GPSDal:
 
     def treat_alert(self, vehicleID, groupOwner, alerts):
         n = len(alerts)
-        values = ','.join(['''(?, ?, ?)
-            ''' for i in range(n)])
+        if n<1:
+            return 
+        values = ','.join(['(?, ?, ?)' for i in range(n)])
         params = []
         for a in alerts:
             params.append([a, groupOwner, vehicleID])
