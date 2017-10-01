@@ -3,6 +3,10 @@ import inspect
 from datetime import datetime
 
 
+class Identity:
+    def __init__(self, imei):
+        self.imei = imei
+
 class Location:
     def __init__(self, imei, time, lng, lat, speed, bearing, altitude, alerts, jit, submit_time=datetime.now(), acc='on', power='on'):
         self.imei = imei

@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 """博实结"""
 from protocol import ProtocolTranslator
-from result import Location
+from result import Location, Identity
 import datetime
 import logging
 
@@ -85,7 +85,8 @@ class A5(ProtocolTranslator):
         return ret
 
     def on_ms_d8(self, s):
-        pass
+        imei = A5.imei(s[10:18])
+        return Identity(imei)
 
 
 class Km(ProtocolTranslator):
