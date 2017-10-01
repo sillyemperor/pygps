@@ -8,24 +8,29 @@ class GPSDal:
         self.location_buff = []
         self.db_connections = db_connections
 
+    def get_conn(self):
+        if not self.conn:
+            self.conn = pyodbc.connect(self.db_connections)
+        return self.conn
+
     def fetchall(self, sql, *args):
-        with pyodbc.connect(self.db_connections) as conn:
-            with conn.cursor() as cur:
-                cur.execute(sql, *args)
-                return cur.fetchall()
+        conn = self.get_conn()
+        with conn.cursor() as cur:
+            cur.execute(sql, *args)
+            return cur.fetchall()
 
     def fetchone(self, sql, *args):
-        with pyodbc.connect(self.db_connections) as conn:
-            with conn.cursor() as cur:
-                cur.execute(sql, *args)
-                return cur.fetchone()
+        conn = self.get_conn()
+        with conn.cursor() as cur:
+            cur.execute(sql, *args)
+            return cur.fetchone()
 
     def execute(self, sql, *args):
-        with pyodbc.connect(self.db_connections) as conn:
-            with conn.cursor() as cur:
-                cur.execute(sql, *args)
-                cur.commit()
-                return cur.rowcount
+        conn = self.get_conn()
+        with conn.cursor() as cur:
+            cur.execute(sql, *args)
+            cur.commit()
+            return cur.rowcount
 
     def get_uid(self, imei):
         user = self.fetchone('''
