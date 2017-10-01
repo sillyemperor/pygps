@@ -80,6 +80,7 @@ class GPSDal:
                          location.power,
                          '',
                          vehicleID)
+        self.treat_alert(vehicleID, groupOwner, location.alerts)
         self.location_buff.append((vehicleID, groupOwner, location))
         self.treat_buff()
 
@@ -89,20 +90,19 @@ class GPSDal:
             return
 
         self.treate_trace(n)
-        self.treat_alert(n)
 
         self.location_buff = []
 
-    def treat_alert(self, n):
+    def treat_alert(self, vehicleID, groupOwner, alerts):
+        n = len(alerts)
         values = ','.join(['''(?, ?, ?)
             ''' for i in range(n)])
         params = []
-        for vehicleID, groupOwner, location in self.location_buff:
-            for a in location.alerts:
-                params.append([a, groupOwner, vehicleID])
+        for a in alerts:
+            params.append([a, groupOwner, vehicleID])
         print 'insert alert', len(params), self.execute('INSERT INTO Alert(Data,GroupOwner, VehicleID) VALUES {values}'.
                                                         format(values=values), *params)
-        
+
     def treate_trace(self, n):
         values = ','.join(['''(?,?,geometry::STGeomFromText(?,4326),?,?,?,?,?,?,?,?,?,?)
             ''' for i in range(n)])
