@@ -41,10 +41,7 @@ class A5(ProtocolTranslator):
         latstr = s[38:46]
         speedstr = s[46:50]
         dirstr = s[50:54]
-
         Bstr = s[64:66]
-        B = int(Bstr, 16)
-        print B&8, Bstr, B
 
         submitTime = datetime.datetime.now()
         lat = float(logstr[0:3]) + float(logstr[3:]) / 60000
@@ -52,6 +49,10 @@ class A5(ProtocolTranslator):
         speed = float(float(speedstr) / 3.6)
         bearing = int(dirstr)
         alerts = []
+
+        B = int(Bstr, 16)
+        if B&8 == 8:
+            alerts.append(u'被拆除')
 
         dataTime = submitTime
 

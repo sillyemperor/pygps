@@ -88,9 +88,24 @@ class GPSDal:
         if n < 50:
             return
 
+        self.treate_trace(n)
+        self.treat_alert(n)
+
+        self.location_buff = []
+
+    def treat_alert(self, n):
+        values = ','.join(['''(?, ?, ?)
+            ''' for i in range(n)])
+        params = []
+        for vehicleID, groupOwner, location in self.location_buff:
+            for a in location.alerts:
+                params.append([a, groupOwner, vehicleID])
+        print 'insert alert', len(params), self.execute('INSERT INTO Alert(Data,GroupOwner, VehicleID) VALUES {values}'.
+                                                        format(values=values), *params)
+        
+    def treate_trace(self, n):
         values = ','.join(['''(?,?,geometry::STGeomFromText(?,4326),?,?,?,?,?,?,?,?,?,?)
             ''' for i in range(n)])
-
         params = []
         for vehicleID, groupOwner, location in self.location_buff:
             params.extend([
@@ -107,8 +122,7 @@ class GPSDal:
                 -1,
                 groupOwner,
                 ''
-                ])
-
+            ])
         print 'insert tracepoint', len(params), self.execute('''
             INSERT INTO [Tracepoint]
 			([SubjectID]
@@ -126,8 +140,6 @@ class GPSDal:
 			,[Extension])
 			VALUES {values}
             '''.format(values=values), *params)
-
-        self.location_buff = []
 
     def get_all_signal(self, imei):
         for i in self.fetchall('''
