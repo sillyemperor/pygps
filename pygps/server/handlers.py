@@ -40,6 +40,7 @@ class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
                     self.user_signal.mark_read_signal(sid)
         except Exception as e:
             logging.error('err=%s', e)
+            traceback.print_exc()
 
 
 class ProtocalTCPFactory(protocol.Factory):
