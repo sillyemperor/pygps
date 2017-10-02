@@ -47,7 +47,7 @@ class ProtocolTranslator:
     def on_main_signaling(self, s, ms):
         raise NotImplementedError('Unknown main signaling %s data=%s' % (ms, s))
 
-    def route_message(self, ms, s):
+    def route_message(self, s, ms):
         func_name = 'on_ms_%s'%ms
         if not hasattr(self, func_name):
             return self.on_main_signaling(ms, s)
@@ -60,7 +60,7 @@ class ProtocolTranslator:
     def do_response(self, s, ms):
         func_name = 'on_ms_resp_%s'%ms
         if not hasattr(self, func_name):
-            return self.build_response(ms, s)
+            return self.build_response(s, ms)
         else:
             func = getattr(self, func_name)
             if not callable(func):
