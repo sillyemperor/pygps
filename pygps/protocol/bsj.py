@@ -111,6 +111,7 @@ class Km(ProtocolTranslator):
     def on_ms_0100(self, s):
         # 7e010000210145304343740003002c012f37303131314b4d2d30312020203030303030303001d4c1423838383838437e
         imei = Km.getImei(s)
+        print imei
         return Identity(imei)
 
 
