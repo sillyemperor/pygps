@@ -115,5 +115,8 @@ class Km(ProtocolTranslator):
         imei = Km.getImei(s)
         print imei
         return Identity(imei)
+    def on_ms_resp_0100(self, s):
+        num = Km.getNum(s)
+        return Km.wrap('800100210145304343740000002c%s010000' % num)
 
 

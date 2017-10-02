@@ -7,7 +7,7 @@ import datetime
 eightHour=datetime.timedelta(hours=8)
 
 class Qnm(ProtocolTranslator):
-    def build_response(self, s):
+    def build_response(self, s, ms):
         pass
 
     def main_signaling(self, s):

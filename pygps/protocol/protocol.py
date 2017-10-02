@@ -12,7 +12,7 @@ class ProtocolTranslator:
         """
         raise NotImplementedError()
 
-    def build_response(self, s):
+    def build_response(self, s, ms):
         """
         构建与主信令相关的回复
         :param s: 转换后的设备输入
@@ -44,17 +44,27 @@ class ProtocolTranslator:
         """
         return s.decode("hex")
 
-    def on_main_signaling(self, ms, s):
+    def on_main_signaling(self, s, ms):
         raise NotImplementedError('Unknown main signaling %s data=%s' % (ms, s))
 
-    def route_message(self, s):
-        ms = 'on_ms_%s'%str(self.main_signaling(s)).lower()
-        if not hasattr(self, ms):
+    def route_message(self, ms, s):
+        func_name = 'on_ms_%s'%ms
+        if not hasattr(self, func_name):
             return self.on_main_signaling(ms, s)
         else:
-            func = getattr(self, ms)
+            func = getattr(self, func_name)
             if not callable(func):
-                raise StandardError('%s is not callable data=%s' % (ms, s))
+                raise StandardError('%s is not callable data=%s' % (func_name, s))
+            return func(s)
+
+    def do_response(self, s, ms):
+        func_name = 'on_ms_resp_%s'%ms
+        if not hasattr(self, func_name):
+            return self.build_response(ms, s)
+        else:
+            func = getattr(self, func_name)
+            if not callable(func):
+                raise StandardError('%s is not callable data=%s' % (func_name, s))
             return func(s)
 
     def on_message(self, data):
@@ -64,4 +74,5 @@ class ProtocolTranslator:
         :return: 解析后的结果，向设备的回复，转换后的设备输入
         """
         s = self.decode_data(data)
-        return self.route_message(s), self.build_response(s), s
+        ms = str(self.main_signaling(s)).lower()
+        return self.route_message(s, ms), self.do_response(s, ms), s

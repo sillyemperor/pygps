@@ -76,7 +76,7 @@ alert 第三字节
     def main_signaling(self, value):
         return value[4:6]
 
-    def build_response(self, value):
+    def build_response(self, value, ms):
         res = "210005" + value[-4:-2] + value[4:6] + value[18:20]
         restr = "2929" + res + Xinan.sum(res) + "0d"
         return restr.upper()
