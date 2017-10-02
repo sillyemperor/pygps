@@ -95,7 +95,7 @@ class GPSDal:
 
     def treat_alert(self, vehicleID, groupOwner, alerts):
         if not alerts:
-            return 
+            return
         n = len(alerts)
         if n<1:
             return

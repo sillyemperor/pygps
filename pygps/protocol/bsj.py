@@ -30,10 +30,9 @@ class A5(ProtocolTranslator):
     def build_response(self, s):
         res = "210005" + s[-4:-2] + s[4:6] + s[18:20]
         restr = "2929" + res + A5.sum(res) + "0d"
-        restr = restr.upper()
+        return restr.upper()
 
     def on_ms_80(self, s):
-        print s
         imei = A5.imei(s[10:18])
         # log
         timestr = s[18:30]
@@ -43,7 +42,7 @@ class A5(ProtocolTranslator):
         dirstr = s[50:54]
         Bstr = s[64:66]
 
-        submitTime = datetime.datetime.now()
+        submit_time = datetime.datetime.now()
         lat = float(logstr[0:3]) + float(logstr[3:]) / 60000
         lng = float(latstr[0:3]) + float(latstr[3:]) / 60000
         speed = float(float(speedstr) / 3.6)
@@ -54,16 +53,16 @@ class A5(ProtocolTranslator):
         if B&8 == 8:
             alerts.append(u'被拆除')
 
-        dataTime = submitTime
+        data_time = submit_time
 
         try:
-            dataTime = datetime.datetime(int("20" + str(int(timestr[:2]))), int(timestr[2:4]), int(timestr[4:6]),
+            data_time = datetime.datetime(int("20" + str(int(timestr[:2]))), int(timestr[2:4]), int(timestr[4:6]),
                                          int(timestr[6:8]), int(timestr[8:10]), int(timestr[10:12]))
         except Exception as ex:
             logging.debug("Wrong time format time=%s imei=%s", timestr, imei)
         return Location(
             imei=imei,
-            time=dataTime,
+            time=data_time,
             lng=lng,
             lat=lat,
             speed=speed,
@@ -84,6 +83,8 @@ class A5(ProtocolTranslator):
 
 
 class Km(ProtocolTranslator):
-    """KM"""
-    pass
+    def main_signaling(self, s):
+        return s[2:6]
+    def on_main_signaling(self, ms, s):
+        print ms, s
 

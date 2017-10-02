@@ -44,14 +44,18 @@ class ProtocolTranslator:
         """
         return s.decode("hex")
 
+    def on_main_signaling(self, ms, s):
+        raise NotImplementedError('Unknown main signaling %s data=%s' % (ms, s))
+
     def route_message(self, s):
         ms = 'on_ms_%s'%str(self.main_signaling(s)).lower()
         if not hasattr(self, ms):
-            raise NotImplementedError('Unknown main signaling %s data=%s' %  (ms, s))
-        func = getattr(self, ms)
-        if not callable(func):
-            raise StandardError('%s is not callable data=%s' % (ms, s))
-        return func(s)
+            return self.on_main_signaling(ms, s)
+        else:
+            func = getattr(self, ms)
+            if not callable(func):
+                raise StandardError('%s is not callable data=%s' % (ms, s))
+            return func(s)
 
     def on_message(self, data):
         """
