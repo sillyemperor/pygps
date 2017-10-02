@@ -83,8 +83,34 @@ class A5(ProtocolTranslator):
 
 
 class Km(ProtocolTranslator):
+    @staticmethod
+    def getImei(s):
+        return s[10:22]
+    @staticmethod
+    def getNum(s):
+        return s[22:26]
+    @staticmethod
+    def mkCrc(s):
+        f = None
+        r = None
+        for i in range(0, len(s), 2):
+            c = int(s[i:i + 2], 16)
+            if f == None:
+                r = c
+            else:
+                r ^= c
+            f = c
+        return r
+    @staticmethod
+    def wrap(b):
+        crc = '%x' % Km.mkCrc(b)
+        r = '7e%s%s7e' % (b, crc)
+        return r
     def main_signaling(self, s):
         return s[2:6]
-    def on_main_signaling(self, ms, s):
-        print ms, s
+    def on_ms_0100(self, s):
+        # 7e010000210145304343740003002c012f37303131314b4d2d30312020203030303030303001d4c1423838383838437e
+        imei = Km.getImei(s)
+        return Identity(imei)
+
 
