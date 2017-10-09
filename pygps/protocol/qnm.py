@@ -14,7 +14,7 @@ class Qnm(ProtocolTranslator):
         return s.startswith('24') and 'binary' or 'ascii'
 
     def decode_data(self, data):
-        return data[0]=='$' and binascii.a2b_hex(data) or data
+        return data[0]=='$' and binascii.b2a_hex(data) or data
 
     def on_ms_binary(self, s):
         imei = s[2:12]
