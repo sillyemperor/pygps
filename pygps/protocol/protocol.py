@@ -20,7 +20,7 @@ class ProtocolTranslator:
         """
         pass
 
-    def build_signal(self, name):
+    def build_signal(self, name, s):
         """
         构建下发指令
         :param name: 指令名称，由平台定义
