@@ -8,6 +8,7 @@ from pygps.protocol.bsj import A5, Km
 from pygps.protocol.longhan import Longhan16m
 from pygps.protocol.xinan import Xinan
 from pygps.protocol.qnm import Qnm
+from pygps.protocol.xinji import Xinji
 
 
 def init_log(level, name, path='', dir='/tmp/logs'):
@@ -37,7 +38,7 @@ def init_log(level, name, path='', dir='/tmp/logs'):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='启动GPS前置机服务')
-    parser.add_argument('translator', help="协议名称：A5,Km,Longhan16m,Xinan,Qnm")
+    parser.add_argument('translator', help="协议名称：A5,Km,Longhan16m,Xinan,Qnm,Xinji")
     parser.add_argument('connection', help="数据库连接字符串")
     parser.add_argument('-p', help="监听端口号", default='3007')
     parser.add_argument('-P', help="使用TCP or UDP 缺省为TCP", default='TCP')
