@@ -3,6 +3,7 @@ from protocol import ProtocolTranslator
 from result import Location, HeartBeat
 import datetime
 import logging
+import binascii
 
 
 class Xinji(ProtocolTranslator):
@@ -10,6 +11,7 @@ class Xinji(ProtocolTranslator):
         return "80"
 
     def decode_data(self, data):
+        data = binascii.b2a_hex(data)
         s = ""
         for i in range(0, len(data), 2):
             s += chr(int(data[i:i + 2], 16))
