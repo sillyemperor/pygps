@@ -108,12 +108,20 @@ class Km(ProtocolTranslator):
         body = '%s%s%s%s%s'%(msg_id, msg_body_attrs, imei, number, msg_body)
         crc = '%x' % Km.crc(body)
         r = '7e%s%s7e' % (body, crc)
-        print r
+        print 'response', r
         return r
     def main_signaling(self, s):
         return s[2:6]
     def on_main_signaling(self, ms, s):
         print ms, s
+
+    def on_ms_0003(self, s):
+        imei = Km.imei(s)
+        return Identity(imei)
+
+    def on_ms_resp_0003(self, s):
+        pass
+
     def on_ms_0100(self, s):
         # 7e010000210145304343740003002c012f37303131314b4d2d30312020203030303030303001d4c1423838383838437e
         #    消息ID[2:6] 消息体属性[6:10] 终端手机号[10:22] 消息流水号[22:26] 省域ID 市县域ID 制造商ID    终端型号            终端ID          车牌颜色  车牌
