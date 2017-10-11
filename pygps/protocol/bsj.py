@@ -110,17 +110,12 @@ class Km(ProtocolTranslator):
         r = '7e%s%s7e' % (body, crc)
         print 'response', r
         return r
+
     def main_signaling(self, s):
         return s[2:6]
+
     def on_main_signaling(self, ms, s):
         print ms, s
-
-    def on_ms_0003(self, s):
-        imei = Km.imei(s)
-        return Identity(imei)
-
-    def on_ms_resp_0003(self, s):
-        pass
 
     def on_ms_0100(self, s):
         # 7e010000210145304343740003002c012f37303131314b4d2d30312020203030303030303001d4c1423838383838437e
@@ -134,7 +129,7 @@ class Km(ProtocolTranslator):
         num = Km.msg_munber(s)
         #   消息头                       消息体            检验码
         #7e 8100 0021 014530434374 0000 [num 01 123456]  45    7e
-        return Km.wrap(msg_id='8100', imei=imei, number='0000', msg_body=num+'01'+'123456')
+        return Km.wrap(msg_id='8100', imei=imei, number='0000', msg_body=num+'00'+'123456')
 
 
 
