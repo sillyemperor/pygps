@@ -105,7 +105,7 @@ class Km(ProtocolTranslator):
     @staticmethod
     def wrap(msg_id, imei, number, msg_body):
         msg_body_attrs = len(msg_body)&int('00000001111111111',2)
-        body = msg_id+msg_body_attrs+imei+number+msg_body
+        body = '%s%s%s%s%s'%(msg_id, msg_body_attrs, imei, number, msg_body)
         crc = '%x' % Km.crc(body)
         r = '7e%s%s7e' % (body, crc)
         return r
