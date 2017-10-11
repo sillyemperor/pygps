@@ -4,6 +4,7 @@ from protocol import ProtocolTranslator
 from result import Location, Identity
 import datetime
 import logging
+import struct
 
 
 class A5(ProtocolTranslator):
@@ -84,13 +85,13 @@ class A5(ProtocolTranslator):
 
 class Km(ProtocolTranslator):
     @staticmethod
-    def getImei(s):
+    def imei(s):
         return s[10:22]
     @staticmethod
-    def getNum(s):
+    def msg_munber(s):
         return s[22:26]
     @staticmethod
-    def mkCrc(s):
+    def crc(s):
         f = None
         r = None
         for i in range(0, len(s), 2):
@@ -102,9 +103,11 @@ class Km(ProtocolTranslator):
             f = c
         return r
     @staticmethod
-    def wrap(b):
-        crc = '%x' % Km.mkCrc(b)
-        r = '7e%s%s7e' % (b, crc)
+    def wrap(msg_id, imei, number, msg_body):
+        msg_body_attrs = len(msg_body)&int('00000001111111111',2)
+        body = msg_id+msg_body_attrs+imei+number+msg_body
+        crc = '%x' % Km.crc(body)
+        r = '7e%s%s7e' % (body, crc)
         return r
     def main_signaling(self, s):
         return s[2:6]
@@ -112,11 +115,18 @@ class Km(ProtocolTranslator):
         print ms, s
     def on_ms_0100(self, s):
         # 7e010000210145304343740003002c012f37303131314b4d2d30312020203030303030303001d4c1423838383838437e
-        imei = Km.getImei(s)
+        #    消息ID[2:6] 消息体属性[6:10] 终端手机号[10:22] 消息流水号[22:26] 省域ID 市县域ID 制造商ID    终端型号            终端ID          车牌颜色  车牌
+        # 7e 0100       0021           014530434374     0003            002c  012f    3730313131 4b4d2d3031202020  30303030303030 01       d4c1423838383838 43 7e
+
+        imei = Km.imei(s)
         return Identity(imei)
     def on_ms_resp_0100(self, s):
-        num = Km.getNum(s)
+        imei = Km.imei(s)
+        num = Km.msg_munber(s)
         print '流水号', num
-        return Km.wrap('800100210145304343740000002c%s010000' % num)
+        #   消息头                       消息体            检验码
+        #7e 8100 0021 014530434374 0000 [num 01 123456]  45    7e
+        return Km.wrap(msg_id='8100', imei=imei, number='0000', msg_body=num+'01'+'123456')
+
 
 
