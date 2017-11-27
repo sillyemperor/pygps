@@ -4,6 +4,7 @@ from ..protocol.result import Location
 import logging
 import threading
 import traceback
+from datetime import datetime
 
 
 class ThreadQueuePusher:
@@ -15,7 +16,7 @@ class ThreadQueuePusher:
     def poll_queue(self):
         while True:
             o = self.queue.get()
-            print 'poll_queue', self.queue.qsize()
+            print 'poll_queue', datetime.now().strftime('%Y-%m-%d %H-%M-%S'), self.queue.qsize()
             logging.debug('poll_queue size(%s)', self.queue.qsize())
             if isinstance(o, Location):
                 try:
