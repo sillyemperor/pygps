@@ -27,7 +27,7 @@ class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
         logging.info('%s timeout', self.transport)
 
     def dataReceived(self, data):
-        logging.info('receive %s', data)
+        logging.debug('receive %s', data)
         try:
             result, response, input_data = self.translator.on_message(data)
             if response:
@@ -61,7 +61,7 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
         self.user_signal=user_signal
 
     def datagramReceived(self, data, (host, port)):
-        logging.info('receive %s', data)
+        logging.debug('receive %s', data)
         try:
             result, response, input_data = self.translator.on_message(data)
             if response:
