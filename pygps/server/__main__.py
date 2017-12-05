@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    init_log(logging.DEBUG, '{translator}_{protocol}_{port}.log'.format(
+    init_log(logging.INFO, '{translator}_{protocol}_{port}.log'.format(
         translator=args.translator, protocol=args.P, port=args.p
     ), dir='./logs')
 
