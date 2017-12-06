@@ -31,7 +31,7 @@ def init_log(level, name, path='', dir='/tmp/logs'):
     handler = logging.StreamHandler()
     handler.setLevel(level)
     handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelno)s %(thread)d %(pathname)s %(lineno)d %(funcName)s %(message)s'))
+        '%(asctime)s %(levelno)s %(message)s'))
     logging.getLogger().addHandler(handler)
 
 
