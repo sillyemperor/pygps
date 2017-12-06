@@ -19,19 +19,11 @@ def init_log(level, name, path='', dir='/tmp/logs'):
     if not os.path.exists(file_folder):
         os.makedirs(file_folder)
 
-    err_file_path = os.path.join(file_folder, 'err_'+name)
-    debug_file_path = os.path.join(file_folder, 'debug_' + name)
+    file_path = os.path.join(file_folder, name)
 
     handler = logging.handlers.RotatingFileHandler(
-        err_file_path, maxBytes=1048576, backupCount=5)
-    handler.setLevel(logging.ERROR)
-    handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelno)s %(thread)d %(pathname)s %(lineno)d %(funcName)s %(message)s'))
-    logging.getLogger().addHandler(handler)
-
-    handler = logging.handlers.RotatingFileHandler(
-        debug_file_path, maxBytes=1048576, backupCount=5)
-    handler.setLevel(logging.DEBUG)
+        file_path, maxBytes=1048576, backupCount=5)
+    handler.setLevel(level)
     handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelno)s %(thread)d %(pathname)s %(lineno)d %(funcName)s %(message)s'))
     logging.getLogger().addHandler(handler)
