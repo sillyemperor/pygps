@@ -13,7 +13,8 @@ class DalPusher:
 
     def push(self, o):
         try:
-            self.dal.add_location(o)
+            if isinstance(o, Location):
+                self.dal.add_location(o)
         except Exception as e:
             logging.error('failed to push %s %s', o, e)
             traceback.print_exc()
