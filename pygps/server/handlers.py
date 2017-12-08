@@ -17,17 +17,17 @@ class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
 
     def makeConnection(self, transport):
         self.transport = transport
-        logging.info('%s connected', transport)
+        logging.error('%s connected', transport)
 
     def connectionLost(self, reason):
-        logging.info('%s lost connection by %s', self.transport, reason)
+        logging.error('%s lost connection by %s', self.transport, reason)
         self.setTimeout(None)
 
     def timeoutConnection(self):
-        logging.info('%s timeout', self.transport)
+        logging.error('%s timeout', self.transport)
 
     def dataReceived(self, data):
-        logging.error('receive %s', data)
+        logging.error('receive data')
         try:
             result, response, input_data = self.translator.on_message(data)
             if response:

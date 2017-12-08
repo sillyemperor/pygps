@@ -7,6 +7,18 @@ import traceback
 from datetime import datetime
 
 
+class DalPusher:
+    def __init__(self, dal):
+        self.dal = dal
+
+    def push(self, o):
+        try:
+            self.dal.add_location(o)
+        except Exception as e:
+            logging.error('failed to push %s %s', o, e)
+            traceback.print_exc()
+
+
 class ThreadQueuePusher:
     def __init__(self, dal, maxsize=256):
         self.queue = Queue.Queue(maxsize=maxsize)

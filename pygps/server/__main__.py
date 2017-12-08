@@ -2,7 +2,7 @@
 import logging
 from twisted.internet import reactor
 from pygps.server.handlers import ProtocalTCPFactory, ProtocalUDPHandler
-from pygps.server.pusher import ThreadQueuePusher
+from pygps.server.pusher import ThreadQueuePusher, DalPusher
 from pygps.goodhope.dal import GPSDal
 from pygps.protocol.bsj import A5, Km
 from pygps.protocol.longhan import Longhan16m
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     #
     dal1 = GPSDal(args.connection)
     dal2 = GPSDal(args.connection)
-    pusher = ThreadQueuePusher(dal=dal1)
+    pusher = DalPusher(dal=dal1)#ThreadQueuePusher(dal=dal1)
     translator = globals()[args.translator]()
     port = int(args.p)
 
