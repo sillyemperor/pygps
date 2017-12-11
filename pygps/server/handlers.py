@@ -25,6 +25,8 @@ class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
 
     def timeoutConnection(self):
         logging.error('%s timeout', self.transport)
+        self.transport.unregisterProducer()
+        self.transport.loseConnection()
 
     def dataReceived(self, data):
         logging.error('receive data')
