@@ -1,33 +1,25 @@
 # -*- coding:utf8 -*-
 import logging
-
 from twisted.internet import protocol
 from twisted.protocols.policies import TimeoutMixin
-
 import traceback
 
-class ProtocalTCPHandler(protocol.Protocol,TimeoutMixin):
+
+class ProtocalTCPHandler(protocol.Protocol, TimeoutMixin):
     def __init__(self, translator, pusher, user_signal=None):
         self.translator = translator
         self.pusher = pusher
         self.user_signal=user_signal
 
     def connectionMade(self):
-            pass
-
-    def makeConnection(self, transport):
-        self.transport = transport
-        logging.error('%s connected', transport)
+        logging.error('%s connected', self.transport.client)
 
     def connectionLost(self, reason):
         logging.error('%s lost connection by %s', self.transport, reason)
         self.setTimeout(None)
 
-    def timeoutConnection(self):
-        logging.error('%s timeout', self.transport)
-
     def dataReceived(self, data):
-        logging.error('receive data')
+        # logging.error('receive data')
         try:
             result, response, input_data = self.translator.on_message(data)
             if response:
