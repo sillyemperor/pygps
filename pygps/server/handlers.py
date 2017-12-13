@@ -6,16 +6,22 @@ import traceback
 
 
 class ProtocalTCPHandler(protocol.Protocol, TimeoutMixin):
+    connection_list = []
     def __init__(self, translator, pusher, user_signal=None):
         self.translator = translator
         self.pusher = pusher
         self.user_signal=user_signal
 
     def connectionMade(self):
-        logging.error('%s connected', self.transport.client)
+        ip = self.transport.client[0]
+        if ip in ProtocalTCPHandler.connection_list:
+            logging.error('%s reconnected', ip)
+        ProtocalTCPHandler.connection_list.append(ip)
+        logging.error('%s connected', ip)
 
     def connectionLost(self, reason):
-        logging.error('%s lost connection by %s', self.transport, reason)
+        ProtocalTCPHandler.connection_list.remove(self.transport.client[0])
+        logging.error('%s lost connection by %s', self.transport.client[0], reason)
         self.setTimeout(None)
 
     def dataReceived(self, data):
