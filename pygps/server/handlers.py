@@ -14,10 +14,11 @@ class ProtocalTCPHandler(protocol.Protocol, TimeoutMixin):
 
     def connectionMade(self):
         ip = self.transport.client[0]
-        if ip in ProtocalTCPHandler.connection_list:
-            logging.error('%s reconnected %s times', ip, ProtocalTCPHandler.connection_list.count(ip))
+        reconnected = ip in ProtocalTCPHandler.connection_list
         ProtocalTCPHandler.connection_list.append(ip)
         logging.error('%s connected', ip)
+        if reconnected:
+            logging.error('%s reconnected %s times', ip, ProtocalTCPHandler.connection_list.count(ip))
 
     def connectionLost(self, reason):
         ProtocalTCPHandler.connection_list.remove(self.transport.client[0])
