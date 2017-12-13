@@ -15,7 +15,7 @@ class ProtocalTCPHandler(protocol.Protocol, TimeoutMixin):
     def connectionMade(self):
         ip = self.transport.client[0]
         if ip in ProtocalTCPHandler.connection_list:
-            logging.error('%s reconnected', ip)
+            logging.error('%s reconnected %s times', ip, ProtocalTCPHandler.connection_list.count(ip))
         ProtocalTCPHandler.connection_list.append(ip)
         logging.error('%s connected', ip)
 
