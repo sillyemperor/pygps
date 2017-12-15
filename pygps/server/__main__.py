@@ -42,6 +42,7 @@ if __name__ == '__main__':
     parser.add_argument('connection', help="数据库连接字符串")
     parser.add_argument('-p', help="监听端口号", default='3007')
     parser.add_argument('-P', help="使用TCP or UDP 缺省为TCP", default='TCP')
+    parser.add_argument('-T', help="使用TCP时的超时秒", default=None, type=int)
 
     args = parser.parse_args()
 
@@ -57,9 +58,10 @@ if __name__ == '__main__':
     pusher = DalPusher(dal=dal1)#ThreadQueuePusher(dal=dal1)
     translator = globals()[args.translator]()
     port = int(args.p)
+    timeout = args.T
 
     if args.P == 'TCP':
-        reactor.listenTCP(port, ProtocalTCPFactory(translator=translator, pusher=pusher, user_signal=dal2))
+        reactor.listenTCP(port, ProtocalTCPFactory(translator=translator, pusher=pusher, user_signal=dal2, timeout=timeout))
     else:
         reactor.listenUDP(port,ProtocalUDPHandler(translator=translator, pusher=pusher, user_signal=dal2))
 

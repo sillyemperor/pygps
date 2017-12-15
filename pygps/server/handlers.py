@@ -7,21 +7,19 @@ import traceback
 
 class ProtocalTCPHandler(protocol.Protocol, TimeoutMixin):
     connection_list = []
-    def __init__(self, translator, pusher, user_signal=None):
+    def __init__(self, translator, pusher, user_signal=None, timeout=None):
         self.translator = translator
         self.pusher = pusher
         self.user_signal=user_signal
+        if timeout:
+            self.setTimeout(timeout)
 
     def connectionMade(self):
+        self.resetTimeout()
         ip = self.transport.client[0]
-        reconnected = ip in ProtocalTCPHandler.connection_list
-        ProtocalTCPHandler.connection_list.append(ip)
         logging.error('%s connected', ip)
-        if reconnected:
-            logging.error('%s reconnected %s times', ip, ProtocalTCPHandler.connection_list.count(ip))
 
     def connectionLost(self, reason):
-        ProtocalTCPHandler.connection_list.remove(self.transport.client[0])
         logging.error('%s lost connection by %s', self.transport.client[0], reason)
         self.setTimeout(None)
 
@@ -47,13 +45,14 @@ class ProtocalTCPHandler(protocol.Protocol, TimeoutMixin):
 
 
 class ProtocalTCPFactory(protocol.Factory):
-    def __init__(self, translator, pusher, user_signal, clazz=ProtocalTCPHandler):
+    def __init__(self, translator, pusher, user_signal, clazz=ProtocalTCPHandler, timeout=None):
         self.clazz = clazz
         self.translator = translator
         self.pusher = pusher
         self.user_signal=user_signal
+        self.timeout = timeout
     def buildProtocol(self, addr):
-        return self.clazz(self.translator, self.pusher, self.user_signal)
+        return self.clazz(self.translator, self.pusher, self.user_signal, self.timeout)
 
 
 class ProtocalUDPHandler(protocol.DatagramProtocol):
@@ -66,6 +65,9 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
         logging.debug('receive %s', data)
         try:
             result, response, input_data = self.translator.on_message(data)
+            if hasattr(result, 'imei'):
+                imei = result.imei
+
             if response:
                 self.transport.write(self.translator.encode_data(response), (host, port))
             self.pusher.push(result)
