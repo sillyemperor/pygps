@@ -1,12 +1,63 @@
 # -*- coding:utf8 -*-
-import pyodbc
-import logging
 
+import logging
+from functools import wraps
+
+
+def reset_decorator(f):
+    @wraps(f)
+    def wrapper(*args, **kwds):
+        print args
+        ex = None
+        for i in  range(3):
+            try:
+                return f(*args, **kwds)
+            except Exception as e:
+                ex = e
+                f.__self__.reset()
+        if ex:
+            raise ex
+    return wrapper
+
+
+# class Dummy:
+#     def __init__(self):
+#         self.r = False
+#         self.fetchall = reset_decorator(self.fetchall)
+#
+#     def reset(self):
+#         self.r = True
+#
+#     def fetchall(self, sql, *args):
+#         print self.r
+#         if not self.r:
+#             raise Exception
+#         return 'OK'
+#
+#
+# d = Dummy()
+#
+# print d.fetchall("","")
+
+
+
+import pyodbc
 
 class GPSDal:
     def __init__(self, db_connections):
         self.location_buff = []
         self.db_connections = db_connections
+        self.fetchall = reset_decorator(self.fetchall)
+        self.fetchone = reset_decorator(self.fetchone)
+        self.execute = reset_decorator(self.execute)
+
+    def reset(self):
+        logging.info('reset connection')
+        try:
+            self.conn.close()
+        except Exception:
+            pass
+        delattr(self, 'conn')
 
     def get_conn(self):
         if not hasattr(self, 'conn'):
