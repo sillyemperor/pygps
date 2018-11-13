@@ -7,7 +7,6 @@ from functools import wraps
 def reset_decorator(f):
     @wraps(f)
     def wrapper(*args, **kwds):
-        print args
         ex = None
         for i in  range(3):
             try:
