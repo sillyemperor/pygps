@@ -2,7 +2,7 @@
 
 import logging
 from functools import wraps
-
+import traceback
 
 def reset_decorator(f):
     @wraps(f)
@@ -12,6 +12,7 @@ def reset_decorator(f):
             try:
                 return f(*args, **kwds)
             except Exception as e:
+                traceback.print_exc()
                 ex = e
                 f.__self__.reset()
         if ex:
@@ -56,7 +57,8 @@ class GPSDal:
             self.conn.close()
         except Exception:
             pass
-        delattr(self, 'conn')
+        if hasattr(self, 'conn'):
+            delattr(self, 'conn')
 
     def get_conn(self):
         if not hasattr(self, 'conn'):
