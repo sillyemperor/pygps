@@ -83,7 +83,8 @@ class A5(ProtocolTranslator):
         return Identity(imei)
 
     def on_ms_e1(self, s):
-        return None;
+        imei = A5.imei(s[10:18])
+        return Identity(imei)
 
 
 
