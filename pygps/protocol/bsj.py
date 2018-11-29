@@ -28,7 +28,7 @@ class A5(ProtocolTranslator):
     def main_signaling(self, s):
         return s[4:6]
 
-    def build_response(self, s):
+    def build_response(self, s, ms):
         res = "210005" + s[-4:-2] + s[4:6] + s[18:20]
         restr = "2929" + res + A5.sum(res) + "0d"
         return restr.upper()
