@@ -82,6 +82,10 @@ class A5(ProtocolTranslator):
         imei = A5.imei(s[10:18])
         return Identity(imei)
 
+    def on_ms_e1(self, s):
+        return None;
+
+
 
 class Km(ProtocolTranslator):
     @staticmethod

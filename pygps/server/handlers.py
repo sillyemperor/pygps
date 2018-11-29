@@ -70,7 +70,8 @@ class ProtocalUDPHandler(protocol.DatagramProtocol):
 
             if response:
                 self.transport.write(self.translator.encode_data(response), (host, port))
-            self.pusher.push(result)
+            if result:
+                self.pusher.push(result)
             if self.user_signal:
                 for sid, name in self.user_signal.get_all_signal(result.imei):
                     signal = self.translator.build_signal(name, input_data)
